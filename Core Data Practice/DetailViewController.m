@@ -35,10 +35,14 @@
 
     if (self.event) {
         
+        NSDateFormatter *dateFormat = [[NSDateFormatter alloc] init];
+        [dateFormat setDateFormat:@"yyyy-MM-dd HH:mm:ss"];
+        NSString *dateFromString = [dateFormat stringFromDate:[NSDate date]];
+        
         self.detailTextField.text = [[self.event valueForKey:@"taskDescription"] description];
         self.insideTitleTextField.text = [[self.event valueForKey:@"insideTaskName"] description];
         self.priorityLabel.text = [[self.event valueForKey:@"priority"] description];
-        self.dateLabel.text = [[self.event valueForKey:@"createdDate"] description];
+        self.dateLabel.text = dateFromString;
         self.completionSegment.selectedSegmentIndex =[[self.event valueForKey:@"completed"] integerValue];
     
     }
@@ -46,14 +50,10 @@
 
 - (IBAction)saveData:(id)sender {
     
-    NSDateFormatter *dateFormat = [[NSDateFormatter alloc] init];
-    [dateFormat setDateFormat:@"yyyy-MM-dd'T'HH:mm:ss"];
-    NSDate *dateFromString = [dateFormat dateFromString:self.dateLabel.text];
-    
     self.event.insideTaskName = self.insideTitleTextField.text;
     self.event.priority = self.priorityLabel.text;
     self.event.taskDescription = self.detailTextField.text;
-    self.event.createdDate = dateFromString;
+    self.event.createdDate = [NSDate date];
     self.event.completed = self.taskCompletionNumber;
     self.event.taskName = self.insideTitleTextField.text;
     
