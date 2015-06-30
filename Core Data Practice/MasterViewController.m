@@ -8,8 +8,12 @@
 
 #import "MasterViewController.h"
 #import "DetailViewController.h"
+#import "Event.h"
 
 @interface MasterViewController ()
+
+@property (strong, nonatomic) NSMutableArray *taskEntries;
+@property (weak, nonatomic) IBOutlet UITextField *titleLabel;
 
 @end
 
@@ -20,28 +24,61 @@
 }
 
 - (void)viewDidLoad {
+    
     [super viewDidLoad];
-    // Do any additional setup after loading the view, typically from a nib.
-    self.navigationItem.leftBarButtonItem = self.editButtonItem;
 
+    self.navigationItem.leftBarButtonItem = self.editButtonItem;
     UIBarButtonItem *addButton = [[UIBarButtonItem alloc] initWithBarButtonSystemItem:UIBarButtonSystemItemAdd target:self action:@selector(insertNewObject:)];
     self.navigationItem.rightBarButtonItem = addButton;
+    
+    NSUserDefaults *defaults = [NSUserDefaults standardUserDefaults];
+    BOOL isReturningUser = [defaults boolForKey:@"ReturningUser"];
+    if (!isReturningUser) {
+        UIAlertView *alert = [[UIAlertView alloc] initWithTitle:@"Welcome" message:@"Thanks for using this app" delegate:nil cancelButtonTitle:@"OK" otherButtonTitles: nil];
+        [alert show];
+        [defaults setBool:YES forKey:@"ReturningUser"];
+        [defaults synchronize];
+    }
+
+}
+
+- (void)addTitle {
+    
+    if (![self.titleLabel.text isEqualToString:@""]) {
+        
+        // Create a new task entry
+        Event *event = [[Event alloc] init];
+        event.taskName = self.titleLabel.text;
+        
+        [self.taskEntries addObject:event];
+        NSInteger newIndex = [self.taskEntries indexOfObject:event];
+        [self.tableView insertRowsAtIndexPaths:@[[NSIndexPath indexPathForRow:newIndex inSection:0]] withRowAnimation:UITableViewRowAnimationAutomatic];
+        self.titleLabel.text = @"";
+    }
+    
+    [self.titleLabel resignFirstResponder];
+
 }
 
 - (void)didReceiveMemoryWarning {
+    
     [super didReceiveMemoryWarning];
-    // Dispose of any resources that can be recreated.
+
 }
 
 - (void)insertNewObject:(id)sender {
+    
     NSManagedObjectContext *context = [self.fetchedResultsController managedObjectContext];
     NSEntityDescription *entity = [[self.fetchedResultsController fetchRequest] entity];
-    NSManagedObject *newManagedObject = [NSEntityDescription insertNewObjectForEntityForName:[entity name] inManagedObjectContext:context];
-        
-    // If appropriate, configure the new managed object.
-    // Normally you should use accessor methods, but using KVC here avoids the need to add a custom class to the template.
-    [newManagedObject setValue:[NSDate date] forKey:@"timeStamp"];
-        
+    
+    //set initial values
+    Event *newManagedObject = [NSEntityDescription insertNewObjectForEntityForName:[entity name] inManagedObjectContext:context];
+    newManagedObject.taskName = self.titleLabel.text;
+    newManagedObject.taskDescription = @"";
+    newManagedObject.priority = @"";
+    newManagedObject.createdDate = [NSDate date];
+
+
     // Save the context.
     NSError *error = nil;
     if (![context save:&error]) {
@@ -50,16 +87,21 @@
         NSLog(@"Unresolved error %@, %@", error, [error userInfo]);
         abort();
     }
+    self.titleLabel.text = @"New item ...";
 }
 
 #pragma mark - Segues
 
+//passing NSManagedObjectContext to DetailViewController
+
 - (void)prepareForSegue:(UIStoryboardSegue *)segue sender:(id)sender {
     if ([[segue identifier] isEqualToString:@"showDetail"]) {
+        
+        DetailViewController *detailViewController = (DetailViewController *)segue.destinationViewController;
         NSIndexPath *indexPath = [self.tableView indexPathForSelectedRow];
-        NSManagedObject *object = [[self fetchedResultsController] objectAtIndexPath:indexPath];
-        [[segue destinationViewController] setDetailItem:object];
-    }
+        Event *event = [self.fetchedResultsController objectAtIndexPath:indexPath];
+        detailViewController.event = event;
+        }
 }
 
 #pragma mark - Table View
@@ -101,7 +143,8 @@
 
 - (void)configureCell:(UITableViewCell *)cell atIndexPath:(NSIndexPath *)indexPath {
     NSManagedObject *object = [self.fetchedResultsController objectAtIndexPath:indexPath];
-    cell.textLabel.text = [[object valueForKey:@"timeStamp"] description];
+    cell.textLabel.text = [[object valueForKey:@"taskName"] description];
+
 }
 
 #pragma mark - Fetched results controller
@@ -112,17 +155,19 @@
         return _fetchedResultsController;
     }
     
-    NSFetchRequest *fetchRequest = [[NSFetchRequest alloc] init];
-    // Edit the entity name as appropriate.
-    NSEntityDescription *entity = [NSEntityDescription entityForName:@"Event" inManagedObjectContext:self.managedObjectContext];
-    [fetchRequest setEntity:entity];
+    NSFetchRequest *fetchRequest = [[NSFetchRequest alloc] initWithEntityName:@"Event"];
     
-    // Set the batch size to a suitable number.
     [fetchRequest setFetchBatchSize:20];
     
     // Edit the sort key as appropriate.
-    NSSortDescriptor *sortDescriptor = [[NSSortDescriptor alloc] initWithKey:@"timeStamp" ascending:NO];
-    NSArray *sortDescriptors = @[sortDescriptor];
+    NSSortDescriptor *sortDescriptorName = [[NSSortDescriptor alloc] initWithKey:@"taskName" ascending:NO];
+    NSSortDescriptor *sortDescriptorDetail = [[NSSortDescriptor alloc] initWithKey:@"taskDescription" ascending:NO];
+    
+    NSSortDescriptor *sortDescriptorDate = [[NSSortDescriptor alloc] initWithKey:@"createdDate"
+                                                 ascending:NO];
+    NSArray *sortDescriptors = @[sortDescriptorDate, sortDescriptorName, sortDescriptorDetail];
+    
+    
     
     [fetchRequest setSortDescriptors:sortDescriptors];
     
@@ -163,6 +208,7 @@
         default:
             return;
     }
+    
 }
 
 - (void)controller:(NSFetchedResultsController *)controller didChangeObject:(id)anObject
@@ -189,12 +235,22 @@
             [tableView insertRowsAtIndexPaths:@[newIndexPath] withRowAnimation:UITableViewRowAnimationFade];
             break;
     }
+    
 }
+
+- (void)setEditing:(BOOL)editing animated:(BOOL)animated {
+    [super setEditing:editing animated:animated];
+    
+    [self.tableView setEditing:editing animated:animated];
+    
+}
+
 
 - (void)controllerDidChangeContent:(NSFetchedResultsController *)controller
 {
     [self.tableView endUpdates];
 }
+
 
 /*
 // Implementing the above methods to update the table view in response to individual changes may have performance implications if a large number of changes are made simultaneously. If this proves to be an issue, you can instead just implement controllerDidChangeContent: which notifies the delegate that all section and object changes have been processed. 

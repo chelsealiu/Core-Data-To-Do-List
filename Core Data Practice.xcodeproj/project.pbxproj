@@ -7,6 +7,7 @@
 	objects = {
 
 /* Begin PBXBuildFile section */
+		5E9621651B420CF600D3D74A /* Event.m in Sources */ = {isa = PBXBuildFile; fileRef = 5E9621641B420CF600D3D74A /* Event.m */; };
 		5ECD8ADB1B41C2BE00DA1527 /* main.m in Sources */ = {isa = PBXBuildFile; fileRef = 5ECD8ADA1B41C2BE00DA1527 /* main.m */; };
 		5ECD8ADE1B41C2BE00DA1527 /* AppDelegate.m in Sources */ = {isa = PBXBuildFile; fileRef = 5ECD8ADD1B41C2BE00DA1527 /* AppDelegate.m */; };
 		5ECD8AE11B41C2BE00DA1527 /* Core_Data_Practice.xcdatamodeld in Sources */ = {isa = PBXBuildFile; fileRef = 5ECD8ADF1B41C2BE00DA1527 /* Core_Data_Practice.xcdatamodeld */; };
@@ -29,6 +30,8 @@
 /* End PBXContainerItemProxy section */
 
 /* Begin PBXFileReference section */
+		5E9621631B420CF600D3D74A /* Event.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = Event.h; sourceTree = "<group>"; };
+		5E9621641B420CF600D3D74A /* Event.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = Event.m; sourceTree = "<group>"; };
 		5ECD8AD51B41C2BE00DA1527 /* Core Data Practice.app */ = {isa = PBXFileReference; explicitFileType = wrapper.application; includeInIndex = 0; path = "Core Data Practice.app"; sourceTree = BUILT_PRODUCTS_DIR; };
 		5ECD8AD91B41C2BE00DA1527 /* Info.plist */ = {isa = PBXFileReference; lastKnownFileType = text.plist.xml; path = Info.plist; sourceTree = "<group>"; };
 		5ECD8ADA1B41C2BE00DA1527 /* main.m */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.objc; path = main.m; sourceTree = "<group>"; };
@@ -86,6 +89,8 @@
 		5ECD8AD71B41C2BE00DA1527 /* Core Data Practice */ = {
 			isa = PBXGroup;
 			children = (
+				5E9621631B420CF600D3D74A /* Event.h */,
+				5E9621641B420CF600D3D74A /* Event.m */,
 				5ECD8ADC1B41C2BE00DA1527 /* AppDelegate.h */,
 				5ECD8ADD1B41C2BE00DA1527 /* AppDelegate.m */,
 				5ECD8AE21B41C2BE00DA1527 /* MasterViewController.h */,
@@ -227,6 +232,7 @@
 			isa = PBXSourcesBuildPhase;
 			buildActionMask = 2147483647;
 			files = (
+				5E9621651B420CF600D3D74A /* Event.m in Sources */,
 				5ECD8AE71B41C2BE00DA1527 /* DetailViewController.m in Sources */,
 				5ECD8AE41B41C2BE00DA1527 /* MasterViewController.m in Sources */,
 				5ECD8AE11B41C2BE00DA1527 /* Core_Data_Practice.xcdatamodeld in Sources */,
@@ -426,6 +432,7 @@
 				5ECD8B001B41C2BE00DA1527 /* Release */,
 			);
 			defaultConfigurationIsVisible = 0;
+			defaultConfigurationName = Release;
 		};
 		5ECD8B011B41C2BE00DA1527 /* Build configuration list for PBXNativeTarget "Core Data PracticeTests" */ = {
 			isa = XCConfigurationList;
@@ -434,6 +441,7 @@
 				5ECD8B031B41C2BE00DA1527 /* Release */,
 			);
 			defaultConfigurationIsVisible = 0;
+			defaultConfigurationName = Release;
 		};
 /* End XCConfigurationList section */
 

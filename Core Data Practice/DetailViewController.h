@@ -7,11 +7,25 @@
 //
 
 #import <UIKit/UIKit.h>
+#import "Event.h"
 
 @interface DetailViewController : UIViewController
 
-@property (strong, nonatomic) id detailItem;
-@property (weak, nonatomic) IBOutlet UILabel *detailDescriptionLabel;
+
+@property (weak, nonatomic) IBOutlet UITextField *insideTitleTextField;
+
+@property (weak, nonatomic) IBOutlet UITextView *detailTextField;
+
+@property (weak, nonatomic) IBOutlet UITextField *priorityLabel;
+
+@property (strong, nonatomic) Event *event;
+
+@property (weak, nonatomic) IBOutlet UILabel *dateLabel;
+
+@property (strong, nonatomic) NSNumber *taskCompletionNumber;
+
+@property (weak, nonatomic) IBOutlet UISegmentedControl *completionSegment;
+
 
 @end
 
