@@ -167,8 +167,6 @@
                                                  ascending:NO];
     NSArray *sortDescriptors = @[sortDescriptorDate, sortDescriptorName, sortDescriptorDetail];
     
-    
-    
     [fetchRequest setSortDescriptors:sortDescriptors];
     
     // Edit the section name key path and cache name if appropriate.

@@ -71,10 +71,10 @@
     NSInteger selectedSegment = sender.selectedSegmentIndex;
     
     if (selectedSegment == 0) {
-        self.taskCompletionNumber = [NSNumber numberWithBool:NO];
+        self.taskCompletionNumber = [NSNumber numberWithBool:NO]; //0, aka completed (YES) in terms of segment index
         
     } else if (selectedSegment == 1) {
-        self.taskCompletionNumber = [NSNumber numberWithBool:YES];
+        self.taskCompletionNumber = [NSNumber numberWithBool:YES]; //1, aka not completed (NO) in terms of segment index 
     
     }
     
